@@ -1,0 +1,12 @@
+{
+  "name": "a2 - Michael O'Connor",
+  "version": "1.0",
+  "description": "Two tiered web application using HTML, CSS, and JS with Node.JS",
+  "author": "",
+  "scripts": {
+    "start": "node server.improved.js"
+  },
+  "dependencies": {
+    "mime": "^2.4.4"
+  }
+}

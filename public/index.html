@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CS4241 Assignment 2</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <link href="css/style.css" rel="stylesheet" />
+    <header>
+      <h2>CS4241 Informal Survey</h2>
+    </header>
+    <main>
+      <form id="input-form">
+        <fieldset>
+          <legend>Demographics</legend>
+          <div class="name">
+            <label for="fName">First Name:</label>
+            <input type="text" id="fName" value="First Name" name="fName" />
+            <br /><br />
+            <label for="lName">Last Name:</label>
+            <input type="text" id="lName" value="Last Name" name="lName" />
+            <br /><br />
+          </div>
+          <fieldset class="majorCont">
+            <legend>Major</legend>
+
+            <label for="majorCS" class="majorCheck">
+              Computer Science
+              <input id="majorCS" type="checkbox" name="majorCS" value="true" />
+              <span class="checkMark"></span>
+            </label>
+            <label for="majorRBE" class="majorCheck">
+              Robotics Engineering
+              <input
+                id="majorRBE"
+                type="checkbox"
+                name="majorRBE"
+                value="true"
+              />
+              <span class="checkMark"></span>
+            </label>
+            <label for="majorID" class="majorCheck">
+              Interpretative Dance
+              <input id="majorID" type="checkbox" name="majorID" value="true" />
+              <span class="checkMark"></span>
+            </label>
+            <label for="majorME" class="majorCheck">
+              Mechanical Engineering
+              <input id="majorME" type="checkbox" name="majorME" value="true" />
+              <span class="checkMark"></span>
+            </label>
+            <label for="majorEE" class="majorCheck">
+              Electrical Engineering
+              <input id="majorEE" type="checkbox" name="majorEE" value="true" />
+              <span class="checkMark"></span>
+            </label>
+            <label for="majorOther" class="majorCheck">
+              Other
+              <input
+                id="majorOther"
+                type="checkbox"
+                name="majorOther"
+                value="true"
+              />
+              <span class="checkMark"></span>
+            </label>
+          </fieldset>
+        </fieldset>
+
+        <fieldset class="radioIOSCont">
+          <legend>How Likely are You to Recommend Outlook for IOS?</legend>
+          <label
+            ><input type="radio" id="hUn" name="outlookRadio" value="0" />
+            Highly Unlikely</label
+          >
+          <label
+            ><input type="radio" id="un" name="outlookRadio" value="1" />
+            Unlikely</label
+          >
+          <label
+            ><input type="radio" id="li" name="outlookRadio" value="2" />
+            Likely</label
+          >
+          <label
+            ><input type="radio" id="hLi" name="outlookRadio" value="3" />
+            Highly Likely</label
+          >
+        </fieldset>
+
+        <br />
+        <fieldset class="radioPlatypus">
+          <legend>Please Identify the Following</legend>
+          <img src="aPlatypus.png" alt="a normal platypus" />
+          <label
+            ><input type="radio" id="platypus" name="platypus" value="3" /> a
+            platypus?</label
+          >
+          <label
+            ><input type="radio" id="niceB" name="platypus" value="2" /> a nice
+            boi</label
+          >
+          <label
+            ><input type="radio" id="trustA" name="platypus" value="1" /> a
+            trustworthy acquaintance</label
+          >
+          <label
+            ><input type="radio" id="unsure" name="platypus" value="0" />
+            unsure</label
+          >
+        </fieldset>
+
+        <br />
+        <fieldset class="radioPerry">
+          <legend>Please Identify the Following</legend>
+          <img
+            src="perryThePlatypus.png"
+            alt="Perry the Platypus from the Disney Channel show Phineas and Ferb."
+          />
+          <label
+            ><input type="radio" id="shiftyB" name="perry" value="0" /> a shifty
+            boi</label
+          >
+          <label
+            ><input type="radio" id="PERRY" name="perry" value="3" /> PERRY THE
+            PLATYPUS!!</label
+          >
+          <label
+            ><input type="radio" id="panda" name="perry" value="2" /> a panda
+            bear</label
+          >
+          <label
+            ><input type="radio" id="unsurePerry" name="perry" value="1" />
+            unsure</label
+          >
+        </fieldset>
+        <audio id="theDoof">
+          <source src="perryPlatypusDoof.mp3" type="audio/mp3" />
+        </audio>
+
+        <button id="submitBtn">submit</button>
+        <button id="toggleData">viewData</button>
+      </form>
+      <div id="data">
+        <label for="removeIDTxt">
+          Delete User:
+          <input
+            type="text"
+            name="removeIDTxt"
+            id="removeIDTxt"
+            value="UserID"
+          />
+        </label>
+        <button name="removeIDBtn" id="removeIDBtn">Delete</button>
+        <div id="formData"></div>
+      </div>
+    </main>
+    <footer>
+      Michael O'Connor<br />CS4241<br />Assignment2<br />ShortStack
+    </footer>
+
+    <script>
+      let serverJSON = "";
+  
+      const submit = function (e) {
+        // prevent default form action from being carried out
+        e.preventDefault();
+  
+        document.getElementById("formData").style.display = "block";
+  
+        const data = new FormData(document.getElementById("input-form"));
+  
+        const json1 = Object.fromEntries(data.entries());
+        if (json1.perry === "3" && json1.platypus === "3") {
+          document.getElementById("theDoof").play();
+        }
+  
+        const body = JSON.stringify(json1);
+        fetch("/submit", {
+          method: "POST",
+          body,
+        })
+          .then((response) => {
+            if (response.status === 400) {
+              return handleInvalidArguments();
+            }
+            return response.json();
+          })
+          .then((json) => {
+            console.log(json);
+            if (json === undefined) return;
+            displayData(json);
+          });
+  
+        return false;
+      };
+  
+      const getSubmittedData = function () {
+        fetch("/submitted", {
+          method: "GET",
+        })
+          .then((response) => {
+            if (response.status === 400) {
+              return;
+            }
+            return response.json();
+          })
+          .then((json) => {
+            console.log(json);
+            if (json === undefined) return;
+            displayData(json);
+          });
+  
+        return false;
+      };
+  
+      const deleteUser = function (e) {
+        console.log("DELETE");
+        e.preventDefault;
+        const deletedUser = document.getElementById("removeIDTxt").value;
+        if (serverJSON.hasOwnProperty(deletedUser)) {
+          console.log("has property");
+          body = deletedUser;
+          fetch("/delete", {
+            method: "POST",
+            body,
+          })
+            .then((response) => {
+              debugger;
+              return response.json();
+            })
+            .then((json) => {
+              displayData(json);
+            });
+        } else handleInvalidDelete();
+      };
+  
+      const displayData = function (json) {
+        // do something with the response
+        serverJSON = json;
+        let responseHTML = document.getElementById("formData");
+  
+        let newHTML = `
+          <label for='PhineasAndFerbKnowledge'>Avg Phineas And Ferb Knowledge</label>
+          <progress id='PhineasAndFerbKnowledge' value=${
+            json.Stats.AvgAnswers.Perry + json.Stats.AvgAnswers.Platypus
+          } max=6></progress>`;
+        let tableHTML = `<table id="totalMajors"><tr>`;
+        Object.keys(json.Stats.Major).forEach((key) => {
+          tableHTML += `<th>${key}</th>`;
+        });
+        tableHTML += "</tr><tr>";
+        Object.values(json.Stats.Major).forEach((value) => {
+          tableHTML += `<td>${value}</td>`;
+        });
+        tableHTML += "</tr>";
+  
+        newHTML += tableHTML;
+  
+        tableHTML = `<table id="dataEntries"><tr><th>UserID</th>`;
+        debugger;
+        const keyArray = Object.keys(json);
+        for (const key in keyArray) {
+          if (keyArray[key] === "Stats") continue;
+          else {
+            if (json.hasOwnProperty(keyArray[key]))
+              Object.keys(json[keyArray[key]]).forEach((nestedKey) => {
+                tableHTML += `<th>${nestedKey}</th>`;
+              });
+            else {
+              console.log("NO ATTRIBUTE " + key[1]);
+            }
+            break;
+          }
+        }
+        tableHTML += "</tr>";
+        for (let keys in json) {
+          if (keys === "Stats") continue;
+          tableHTML += `<tr> <td>${keys}</td>`;
+          Object.values(json[keys]).forEach((value) => {
+            tableHTML += `<td>${value}</td>`;
+          });
+          tableHTML += "</tr>";
+        }
+  
+        newHTML += tableHTML;
+        responseHTML.innerHTML = newHTML;
+      };
+  
+      const handleInvalidDelete = function () {
+        alert("User ID not found!");
+      };
+  
+      const handleInvalidArguments = function () {
+        alert("Please complete all questions before submitting");
+      };
+  
+      const toggleDataView = function (e) {
+        debugger;
+        e.preventDefault();
+        const dataPanel = document.querySelector("div[id='data']");
+        if (dataPanel.style.display === "block") {
+          console.log(dataPanel.style.display);
+          dataPanel.style.display = "none";
+        } else {
+          dataPanel.style.display = "block";
+          if (serverJSON === "") {
+            getSubmittedData();
+          }
+        }
+      };
+  
+      window.onload = function () {
+        const button = document.querySelector("button");
+        button.onclick = submit;
+  
+        const deleteBtn = document.querySelector("[id=removeIDBtn]");
+        deleteBtn.onclick = deleteUser;
+  
+        const viewDataBtn = document.querySelector("button[id='toggleData']");
+        viewDataBtn.onclick = toggleDataView;
+      };
+    </script>
+  </body>
+
+  
+</html>

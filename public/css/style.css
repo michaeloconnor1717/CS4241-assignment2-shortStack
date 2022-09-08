@@ -1,0 +1,156 @@
+/*Style your own assignment! This is fun! */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;500&family=Varela+Round&display=swap'); 
+
+* {
+  margin: 0;
+  padding: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  font-family: 'Roboto', sans-serif;
+}
+
+body {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  background-color: #EFEFEF;
+}
+
+header{
+  background-color: #301818;
+  text-align: center;
+  font-size: larger;
+  color: #EFEFEF;
+}
+
+main {
+  width: 90%;
+  display: flexbox;
+  margin: auto;
+}
+
+fieldset {
+  border: none;
+}
+
+.name {
+  padding: 0.5%;
+}
+
+.majorCont {
+  display: flex;
+  width: 40%;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: left;
+  margin: auto;
+  margin-left: 0.5%;
+  padding: 0.5%;
+  position: relative;
+  max-width: 500px;
+}
+.majorCheck {
+  display: inline-flex;
+  justify-content: space-between;
+
+  padding-left: 35px;
+  cursor: pointer;
+  padding-bottom: 1%;
+  text-align: left;
+}
+
+/* hides default checkbox */
+.majorCheck input {
+  opacity: 0;
+  position: absolute;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* creates new one out of a span */
+.checkMark {
+  position: relative;
+  left: 5px;
+  top: 0px;
+  height: 20px;
+  width: 20px;
+  background-color: grey;
+}
+
+.majorCheck:hover input ~ .checkMark {
+  background-color: #a9a9a9;
+}
+
+.majorCheck input:checked ~ .checkMark {
+  background-color: #189090;
+}
+
+/*Hides check when not checked*/
+.checkMark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+/*shows check*/
+.majorCheck input:checked ~ .checkMark:after {
+  display: block;
+  left: 6px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+.radioIOSCont {
+  display: flex;
+  flex-direction: column;
+}
+
+img {
+  padding: 5% 0 0 0;
+  height: 20%;
+  width: 20%;
+  max-height: 600px;
+  max-width: 600px;
+}
+
+table {
+  border: 2px solid black;
+}
+td {
+  border: 2px dashed grey;
+  border-top: none;
+  border-right: none;
+}
+th {
+  border: 2px dashed grey;
+  padding: 2px;
+  border-right: none;
+}
+
+div[id="data"] {
+  display: none;
+  padding: 3% 0% 3% 1%;
+}
+
+footer {
+  min-height: 10%;
+  width: 100%;
+  background-color: #189090;
+  padding: 0.75% 1% 0.5% 1%;
+}
+
+.radioPerry {
+  display: flex;
+  flex-direction: column;
+}
+
+.radioPlatypus {
+    display: flex;
+    flex-direction: column;
+  }

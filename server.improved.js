@@ -1,3 +1,5 @@
+const { json } = require("stream/consumers");
+
 const http = require("http"),
   fs = require("fs"),
   // IMPORTANT: you must run `npm install` in the directory for this assignment
@@ -9,17 +11,17 @@ const http = require("http"),
 const appdata = {
   Stats: {
     Major: {
-      majorCS: 0,
+      majorCS: 2,
       majorRBE: 0,
       majorID: 0,
       majorME: 0,
-      majorEE: 0,
+      majorEE: 1,
       majorOther: 0,
     },
     AvgAnswers: {
-      outlookForIOS: 0,
-      Platypus: 0,
-      Perry: 0,
+      outlookForIOS: 2,
+      Platypus: 3,
+      Perry: 2,
     },
   },
   User1: {
@@ -43,7 +45,7 @@ const appdata = {
     lName: 'Hollyer',
     outlookRadio: '1',
     platypus: '3',
-    perry: '0',
+    perry: '1',
     Majors: [ 'majorEE' ]
   }
 };
@@ -113,10 +115,12 @@ const handlePost = function (request, response) {
       if (request.url === "/delete") {
         console.log("Delete Requested");
         const attributeRegEx = /User[0-9]+/g;
+        dataString = dataString.trim();
         if (
           attributeRegEx.test(dataString.trim()) &&
           responseJSON.hasOwnProperty(dataString.trim())
         ) {
+          handleDeletedUser(dataString)
           delete responseJSON[dataString.trim()];
           response.writeHead(200, "OK", { "Content-Type": "text/plain" });
           response.end(JSON.stringify(responseJSON));
@@ -185,6 +189,21 @@ function handleMajors(userData) {
   }
   userData = { ...userData, Majors };
   return userData;
+}
+
+function handleDeletedUser(userID){
+  const majorArray = responseJSON[userID].Majors;
+  
+  for(const major in majorArray){
+    if(responseJSON.Stats.Major.hasOwnProperty(major)){
+      responseJSON.Stats.Major[major]--;
+    }
+  }
+
+  const numOfUsers = Object.keys(responseJSON).length-1
+  responseJSON.Stats.AvgAnswers.Perry = ((responseJSON.Stats.AvgAnswers.Perry*numOfUsers)-responseJSON[userID].perry)/(numOfUsers-1)
+  responseJSON.Stats.AvgAnswers.Platypus = ((responseJSON.Stats.AvgAnswers.Platypus*numOfUsers)-responseJSON[userID].platypus)/(numOfUsers-1)
+  responseJSON.Stats.AvgAnswers.outlookForIOS = ((responseJSON.Stats.AvgAnswers.outlookForIOS*numOfUsers)-responseJSON[userID].outlookRadio)/(numOfUsers-1)
 }
 
 const sendFile = function (response, filename) {

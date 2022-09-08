@@ -244,7 +244,17 @@
           <progress id='PhineasAndFerbKnowledge' value=${
             json.Stats.AvgAnswers.Perry + json.Stats.AvgAnswers.Platypus
           } max=6></progress>`;
-        let tableHTML = `<table id="totalMajors"><tr>`;
+        let tableHTML = `<table id="avgAnswers"><tr>`;
+          Object.keys(json.Stats.AvgAnswers).forEach((key) => {
+          tableHTML += `<th>${key}</th>`;
+        });
+        tableHTML += "</tr><tr>";
+        Object.values(json.Stats.AvgAnswers).forEach((value) => {
+          tableHTML += `<td>${value}</td>`;
+        });
+        tableHTML += "</tr>";
+
+         tableHTML += `<table id="totalMajors"><tr>`;
         Object.keys(json.Stats.Major).forEach((key) => {
           tableHTML += `<th>${key}</th>`;
         });

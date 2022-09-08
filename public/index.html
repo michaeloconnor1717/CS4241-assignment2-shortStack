@@ -240,11 +240,11 @@
         let responseHTML = document.getElementById("formData");
   
         let newHTML = `
-          <label for='PhineasAndFerbKnowledge'>Avg Phineas And Ferb Knowledge</label>
+          <label for='PhineasAndFerbKnowledge'>Avg Doofenshmirtz-ness</label>
           <progress id='PhineasAndFerbKnowledge' value=${
             json.Stats.AvgAnswers.Perry + json.Stats.AvgAnswers.Platypus
-          } max=6></progress>`;
-        let tableHTML = `<table id="avgAnswers"><tr>`;
+          } max=6></progress><br>`;
+        let tableHTML = `<table id="avgAnswers">Average Answers<tr>`;
           Object.keys(json.Stats.AvgAnswers).forEach((key) => {
           tableHTML += `<th>${key}</th>`;
         });
@@ -254,7 +254,7 @@
         });
         tableHTML += "</tr>";
 
-         tableHTML += `<table id="totalMajors"><tr>`;
+         tableHTML += `<table id="totalMajors">Number of Responses by Major<tr>`;
         Object.keys(json.Stats.Major).forEach((key) => {
           tableHTML += `<th>${key}</th>`;
         });
@@ -266,7 +266,7 @@
   
         newHTML += tableHTML;
   
-        tableHTML = `<table id="dataEntries"><tr><th>UserID</th>`;
+        tableHTML = `<table id="dataEntries">User Data<tr><th>UserID</th>`;
         debugger;
         const keyArray = Object.keys(json);
         for (const key in keyArray) {
